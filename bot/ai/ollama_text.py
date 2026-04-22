@@ -4,7 +4,13 @@ from typing import List, Optional, Tuple
 
 import httpx
 
-from bot.config import DEFAULT_MODEL, OLLAMA_URL, TIMEOUT
+from bot.config import (
+    DEFAULT_MODEL,
+    MAX_TOKENS,
+    OLLAMA_URL,
+    SYSTEM_PROMPT_TEXT,
+    TIMEOUT,
+)
 
 
 class OllamaTextClient:
@@ -15,10 +21,14 @@ class OllamaTextClient:
         base_url: str = OLLAMA_URL,
         default_model: str = DEFAULT_MODEL,
         timeout: int = TIMEOUT,
+        default_max_tokens: int = MAX_TOKENS,
+        default_system_prompt: str = SYSTEM_PROMPT_TEXT,
     ):
         self.base_url = base_url
         self.default_model = default_model
         self.timeout = timeout
+        self.default_max_tokens = default_max_tokens
+        self.default_system_prompt = default_system_prompt
         self.client = httpx.AsyncClient(timeout=timeout)
 
     async def generate(
@@ -26,31 +36,21 @@ class OllamaTextClient:
         prompt: str,
         model: Optional[str] = None,
         context: Optional[List[int]] = None,
+        system_prompt: Optional[str] = None,
         temperature: float = 0.7,
-        max_tokens: int = 512,
+        max_tokens: Optional[int] = None,
     ) -> Tuple[str, Optional[List[int]]]:
-        """
-        Generate a response from Ollama.
-
-        Args:
-            prompt: User input text
-            model: Model name (uses default if None)
-            context: Previous conversation context from Ollama (list of integers)
-            temperature: Randomness (0.0 to 1.0)
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            Tuple of (response_text, new_context)
-        """
         model = model or self.default_model
+        max_tokens = max_tokens or self.default_max_tokens
+        system_prompt = system_prompt or self.default_system_prompt
 
         payload = {
             "model": model,
             "prompt": prompt,
+            "system": system_prompt,
             "stream": False,
             "options": {"temperature": temperature, "num_predict": max_tokens},
         }
-
         if context is not None:
             payload["context"] = context
 
@@ -69,5 +69,4 @@ class OllamaTextClient:
             raise RuntimeError(f"Unexpected error: {str(e)}")
 
     async def close(self):
-        """Close the HTTP client."""
         await self.client.aclose()
