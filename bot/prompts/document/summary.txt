@@ -1,0 +1,6 @@
+DOCUMENTO: {{doc_name}}
+CONTENIDO:
+{{doc_content}}
+
+INSTRUCCIÓN: El usuario pide un resumen del documento. RESPONDE ÚNICAMENTE EN ESPAÑOL. Resume de forma estructurada. Si es un currículum, incluye: nombre, educación, experiencia laboral (empresas y fechas), habilidades técnicas, idiomas. No inventes datos ni uses otros idiomas.
+Pregunta del usuario: {{user_question}}
