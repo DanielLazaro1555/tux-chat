@@ -1,4 +1,8 @@
+# config.py - Configuration file for the Tux Chat bot
+
 import os
+from copy import PyStringMap
+
 from dotenv import load_dotenv
 
 # Load .env file
