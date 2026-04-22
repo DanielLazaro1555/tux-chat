@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Variables de entorno (contienen secretos)
+.env
+.env.local
+.env.*.local
+
+# Archivos de datos del bot (sesiones, historial)
+data/*.json
+data/*.db
+data/*.sqlite
+!data/.gitkeep
+
+# Logs
+logs/*.log
+logs/*.log.*
+!logs/.gitkeep
+
+# Editores y herramientas
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos de configuración local (no compartir)
+config.local.py
+*.user
