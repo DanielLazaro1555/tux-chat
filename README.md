@@ -1,2 +1,2 @@
 # tux-chat
-Pingüino parlante potenciado por Ollama
+Pingüino parlante potenciado por IA
