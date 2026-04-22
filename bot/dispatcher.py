@@ -1,11 +1,8 @@
 # bot/dispatcher.py - Dispatcher to route Telegram updates to appropriate handlers.
 
-"""Dispatcher to route Telegram updates to appropriate handlers."""
+from telegram.ext import CommandHandler, MessageHandler, filters
 
-from telegram import Update
-from telegram.ext import CommandHandler, ContextTypes, MessageHandler, filters
-
-from bot.handlers import commands, text
+from bot.handlers import commands, document, text  # <-- AÑADIR document
 
 
 def register_handlers(application):
@@ -22,4 +19,7 @@ def register_handlers(application):
         MessageHandler(filters.TEXT & ~filters.COMMAND, text.handle_text)
     )
 
-    # (Futuro) handlers para imágenes, audio, etc.
+    # Document handler (PDF, DOCX, TXT)
+    application.add_handler(
+        MessageHandler(filters.Document.ALL, document.handle_document)
+    )
