@@ -1,4 +1,6 @@
-"""Async client for Ollama text generation API."""
+# bot/ai/ollama_text.py - Async client for Ollama text generation API.
+
+from typing import List, Optional, Tuple
 
 import httpx
 
@@ -22,18 +24,18 @@ class OllamaTextClient:
     async def generate(
         self,
         prompt: str,
-        model: str = None,
-        context: list = None,
+        model: Optional[str] = None,
+        context: Optional[List[int]] = None,
         temperature: float = 0.7,
         max_tokens: int = 512,
-    ) -> tuple[str, list | None]:
+    ) -> Tuple[str, Optional[List[int]]]:
         """
         Generate a response from Ollama.
 
         Args:
             prompt: User input text
             model: Model name (uses default if None)
-            context: Previous conversation context from Ollama
+            context: Previous conversation context from Ollama (list of integers)
             temperature: Randomness (0.0 to 1.0)
             max_tokens: Maximum tokens to generate
 
@@ -49,7 +51,7 @@ class OllamaTextClient:
             "options": {"temperature": temperature, "num_predict": max_tokens},
         }
 
-        if context:
+        if context is not None:
             payload["context"] = context
 
         try:
