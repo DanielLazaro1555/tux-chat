@@ -7,12 +7,15 @@ import PyPDF2
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from bot.database import save_message  # <-- NUEVO: guardar en BD
+
 
 async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Process uploaded document and extract text."""
+    """Process uploaded document, extract text, store in DB and session."""
     if update.effective_message is None or update.effective_user is None:
         return
 
+    user_id = update.effective_user.id
     document = update.effective_message.document
     if not document:
         return
@@ -63,7 +66,11 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(text) > MAX_CHARS:
         text = text[:MAX_CHARS] + "\n\n[Documento truncado por ser muy largo]"
 
-    # Guardar en user_data
+    # --- Guardar en base de datos como mensaje del usuario ---
+    contenido_bd = f"[Documento: {file_name}]\n\n{text}"
+    save_message(user_id, "user", contenido_bd)
+
+    # --- Guardar en user_data para la sesión actual (opcional) ---
     if context.user_data is None:
         context.user_data = {}
     context.user_data["document_text"] = text
@@ -72,6 +79,6 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.effective_message.reply_text(
         f"✅ Documento `{file_name}` procesado.\n"
         f"Caracteres extraídos: {len(text)}\n"
-        "Ahora puedes preguntarme sobre su contenido.",
+        "El contenido se ha guardado en el historial. Ahora puedes preguntarme sobre él.",
         parse_mode="Markdown",
     )
