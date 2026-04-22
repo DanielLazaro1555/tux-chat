@@ -1,0 +1,8 @@
+DOCUMENTO: {{doc_name}}
+CONTENIDO:
+{{doc_content}}
+
+PREGUNTA DEL USUARIO:
+{{user_question}}
+
+INSTRUCCIÓN: RESPONDE ÚNICAMENTE EN ESPAÑOL. Basa tu respuesta estrictamente en el contenido del documento. Si la respuesta no está en el documento, di exactamente: "No encontré esa información en el documento". No pidas más contexto.
